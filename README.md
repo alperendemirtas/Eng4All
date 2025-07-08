@@ -15,7 +15,7 @@ Eğitim Teknolojileri
 - etkilipratikingilizce
 
 ## Uygulama Adresi
-[eng4all.co](http://eng4all.co)
+[eng4all.tr](http://eng4all.tr)
 
 ## Grup Adı
 Eng4All Team
@@ -29,4 +29,6 @@ Eng4All Team
 ---
 
 [1. Gereksinim Analizi](Gereksinim-Analizi.md)  
-[2. Durum Diyagramı](Durum-Diyagramı.svg)
+[2. Durum Diyagramı](Durum-Diyagramı.svg)  
+[3. Durum Senaryoları](durumSenaryolari.md)  
+[4. Front-End](Front-End.md)  

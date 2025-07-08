@@ -1,4 +1,4 @@
-13.Görsel ve videolu eğitim: Siteye eklediğimiz görsel ve videolu eğitimler sayesinde kullanıcılar bu içeriklerden faydalanabilir.
+13.Görsel ve videolu eğitim: Siteye eklediğimiz görsel ve videolu eğitimler sayesinde kullanıcılar bu içeriklerden faydalanabilir.
 
 14.Şifremi unuttum: Şifre unutulması durumunda doğrulamanın ardından kullanıcı şifreyi yeniden belirleyebilir.
 
@@ -8,4 +8,5 @@
 
 17.Geribildirim ve site puanlama: Uygulamanın gelişimi için kullanıcının geri bildirim bırakıp puanlama yapabileceği bir alan.
 
-18.Kelimeleri sesli dinleme desteği: Kullanıcı istediği kelimenin telaffuzunu dinleyebilir.
+18.Kelimeleri sesli dinleme desteği: Kullanıcı istediği kelimenin telaffuzunu dinleyebilir
+
