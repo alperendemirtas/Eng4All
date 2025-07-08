@@ -3,6 +3,8 @@ import { jwtVerify } from 'jose';
 import dbConnect from '@/lib/mongodb';
 import UserModel, { IUser } from '@/models/User';
 
+export const dynamic = 'force-dynamic';
+
 const JWT_SECRET = process.env.JWT_SECRET;
 
 export async function GET(request: NextRequest) {
