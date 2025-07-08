@@ -15,12 +15,15 @@ export const metadata: Metadata = {
 }
 
 import { MainDashboard } from "@/components/main-dashboard"; // MainDashboard import edildi
+import { getUser } from "@/lib/session";
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode
 }>) {
+  const user = await getUser();
+
   return (
     <html lang="tr" suppressHydrationWarning>
       <head>
@@ -35,7 +38,7 @@ export default function RootLayout({
             Şimdilik tüm sayfaların MainDashboard'u kullanacağını varsayalım.
             Eğer login/register sayfaları için farklı bir düzen gerekiyorsa, bunu ayrıca ele almalıyız.
           */}
-          <MainDashboard>
+          <MainDashboard user={user}>
             {children}
           </MainDashboard>
           <Toaster />

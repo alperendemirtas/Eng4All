@@ -79,49 +79,38 @@ export async function signUp(formData: FormData) {
   }
 }
 
-export async function signIn(previousState: any, formData: FormData) {
+export async function signIn(formData: FormData) {
   const email = formData.get("email") as string;
   const password = formData.get("password") as string;
-  console.log(`[signIn Action] Çağrıldı. E-posta: ${email}`);
 
   try {
     await dbConnect(); 
-    console.log("[signIn Action] MongoDB bağlantısı başarılı.");
 
     if (!email || !password) {
-      console.log("[signIn Action] Hata: E-posta veya şifre eksik.");
       return { error: "E-posta ve şifre gereklidir." };
     }
 
-    console.log(`[signIn Action] Kullanıcı aranıyor: ${email}`);
     const user = await UserModel.findOne({ email }).select("+password");
 
     if (!user) {
-      console.log(`[signIn Action] Kullanıcı bulunamadı: ${email}`);
       return { error: "Geçersiz e-posta veya şifre." };
     }
-    console.log(`[signIn Action] Kullanıcı bulundu: ${user.email}, ID: ${user._id}`);
 
     if (!user.password) {
-        console.error("[signIn Action] Hata: Kullanıcının veritabanında şifresi bulunmuyor. Bu beklenmedik bir durum.");
         return { error: "Kullanıcı hesabı yapılandırma hatası." };
     }
-    console.log("[signIn Action] Şifre karşılaştırılıyor...");
+    
     const isMatch = await user.comparePassword(password);
-    console.log(`[signIn Action] Şifre eşleşme durumu: ${isMatch}`);
 
     if (!isMatch) {
-      console.log("[signIn Action] Şifre eşleşmedi.");
       return { error: "Geçersiz e-posta veya şifre." };
     }
 
     const userIdStringFromUser = user._id?.toString();
     if (!userIdStringFromUser) {
-        console.error("[signIn Action] Hata: Kullanıcı ID'si oluşturulamadı.");
         throw new Error("Kullanıcı ID'si oluşturulamadı.");
     }
     const token = createToken(userIdStringFromUser);
-    console.log(`[signIn Action] Token oluşturuldu: ${token ? 'Başarılı' : 'Başarısız'}`);
 
     const cookieStore = await cookies();
     cookieStore.set("token", token, { 
@@ -131,14 +120,13 @@ export async function signIn(previousState: any, formData: FormData) {
       path: "/",
       maxAge: 60 * 60 * 24, 
     });
-    console.log("[signIn Action] Cookie ayarlandı.");
 
   } catch (error: any) {
     console.error("[signIn Action] Giriş sırasında genel hata:", error);
-    return { error: error.message || "Bir hata oluştu. Lütfen tekrar deneyin." };
+    return { error: "Bir hata oluştu. Lütfen tekrar deneyin." };
   }
 
-  redirect("/dashboard");
+  return { success: true };
 }
 
 export async function signOut() {
