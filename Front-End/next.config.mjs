@@ -18,9 +18,7 @@ const nextConfig = {
       // Gerekirse diğer domainler buraya eklenebilir
     ],
   },
-  experimental: {
-    serverComponentsExternalPackages: ["mongoose"],
-  },
+  serverExternalPackages: ["mongoose"],
   webpack(config) {
     config.experiments = {
       ...config.experiments,
