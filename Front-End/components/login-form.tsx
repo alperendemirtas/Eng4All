@@ -1,88 +1,56 @@
-"use client"
+"use client";
 
-import type React from "react";
-import { useState } from "react";
-// import { useRouter } from "next/navigation"; 
+import { useFormState, useFormStatus } from "react-dom";
+import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { signIn } from "@/actions/auth-actions"; 
-import { useToast } from "@/hooks/use-toast"; 
-// import { useAuth } from "@/hooks/useAuth"; // mutateAuth artık kullanılmayacak
+import { signIn } from "@/actions/auth-actions";
+import { useToast } from "@/hooks/use-toast";
+
+// Form gönderilirken butonu devre dışı bırakmak ve "Yükleniyor..." metni göstermek için ayrı bir bileşen.
+function SubmitButton() {
+  const { pending } = useFormStatus();
+
+  return (
+    <Button
+      type="submit"
+      className="w-full h-12 bg-[#58cc02] hover:bg-[#46a302] text-white font-bold text-lg rounded-xl"
+      disabled={pending}
+    >
+      {pending ? "GİRİŞ YAPILIYOR..." : "GİRİŞ YAP"}
+    </Button>
+  );
+}
 
 export default function LoginForm() {
-  // const router = useRouter(); 
+  const [state, formAction] = useFormState(signIn, undefined);
   const { toast } = useToast();
-  // const { mutate: mutateAuth } = useAuth(); // mutateAuth artık kullanılmayacak
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setIsLoading(true);
-
-    const formData = new FormData();
-    formData.append("email", email);
-    formData.append("password", password);
-
-    try {
-      const result = await signIn(formData);
-
-      if (result?.error) {
-        toast({
-          title: "Giriş Başarısız",
-          description: result.error,
-          variant: "destructive",
-        });
-        setIsLoading(false); // Hata durumunda loading'i kaldır
-      } else if (result?.success) {
-        toast({
-          title: "Giriş Başarılı",
-          description: result.message + " Yönlendiriliyorsunuz...",
-        });
-        // mutateAuth çağrısı kaldırıldı.
-        // Sadece tam sayfa yenilemesiyle dashboard'a yönlendir.
-        // Bu, cookie'nin kesin olarak alınmasını ve sayfanın doğru state ile yüklenmesini sağlamalı.
-        window.location.href = "/dashboard";
-        // Yönlendirme sonrası bu bileşen unmount olacağı için setIsLoading(false) genellikle gereksizdir,
-        // ancak bir sonraki satıra geçme ihtimaline karşı (ki geçmemeli) bırakılabilir veya kaldırılabilir.
-        // setIsLoading(false); // Yönlendirme sonrası bu satıra gelinmemeli.
-      } else {
-         toast({
-          title: "Hata",
-          description: "Bilinmeyen bir hata oluştu.",
-          variant: "destructive",
-        });
-        setIsLoading(false); // Hata durumunda loading'i kaldır
-      }
-    } catch (err) {
-      console.error("Giriş formu hatası:", err);
+  // Server action'dan bir hata mesajı dönerse, bunu bir toast bildirimiyle göster.
+  useEffect(() => {
+    if (state?.error) {
       toast({
-        title: "Sistem Hatası",
-        description: "Giriş yapılırken bir sorun oluştu. Lütfen tekrar deneyin.",
+        title: "Giriş Başarısız",
+        description: state.error,
         variant: "destructive",
       });
-      setIsLoading(false); // Hata durumunda loading'i kaldır
-    } 
-    // finally bloğu kaldırıldı, çünkü başarılı yönlendirme durumunda setIsLoading(false) gereksiz.
-    // Hata durumlarında setIsLoading(false) zaten ilgili bloklarda çağrılıyor.
-  };
+    }
+  }, [state, toast]);
 
   return (
     <div className="w-full max-w-md mx-auto p-6 bg-white rounded-2xl shadow-lg">
       <h2 className="text-2xl font-bold text-center text-[#4b4b4b] mb-6">Giriş Yap</h2>
 
-      <form onSubmit={handleSubmit} className="space-y-4">
+      <form action={formAction} className="space-y-4">
         <div className="space-y-2">
           <Label htmlFor="email" className="text-[#4b4b4b]">
             E-posta
           </Label>
           <Input
             id="email"
+            name="email" // name özelliği form verisine eklenmesi için gerekli
             type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
             placeholder="E-posta adresiniz"
             className="h-12 border-[#e5e5e5] rounded-xl focus:border-[#58cc02] focus:ring-[#58cc02]"
             required
@@ -95,22 +63,20 @@ export default function LoginForm() {
           </Label>
           <Input
             id="password"
+            name="password" // name özelliği form verisine eklenmesi için gerekli
             type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
             placeholder="Şifreniz"
             className="h-12 border-[#e5e5e5] rounded-xl focus:border-[#58cc02] focus:ring-[#58cc02]"
             required
           />
         </div>
 
-        <Button
-          type="submit"
-          className="w-full h-12 bg-[#58cc02] hover:bg-[#46a302] text-white font-bold text-lg rounded-xl"
-          disabled={isLoading}
-        >
-          {isLoading ? "GİRİŞ YAPILIYOR..." : "GİRİŞ YAP"}
-        </Button>
+        {/* Hata mesajını form içinde de gösterebiliriz (isteğe bağlı) */}
+        {state?.error && (
+          <p className="text-sm text-red-500">{state.error}</p>
+        )}
+
+        <SubmitButton />
 
         <div className="text-center">
           <a href="/forgot-password" className="text-[#1cb0f6] hover:underline text-sm">

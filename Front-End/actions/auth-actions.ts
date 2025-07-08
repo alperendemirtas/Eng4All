@@ -79,7 +79,7 @@ export async function signUp(formData: FormData) {
   }
 }
 
-export async function signIn(formData: FormData) {
+export async function signIn(previousState: any, formData: FormData) {
   const email = formData.get("email") as string;
   const password = formData.get("password") as string;
   console.log(`[signIn Action] Çağrıldı. E-posta: ${email}`);
@@ -133,14 +133,12 @@ export async function signIn(formData: FormData) {
     });
     console.log("[signIn Action] Cookie ayarlandı.");
 
-    return {
-      success: true,
-      message: "Giriş başarılı! Yönlendiriliyorsunuz...",
-    };
   } catch (error: any) {
     console.error("[signIn Action] Giriş sırasında genel hata:", error);
     return { error: error.message || "Bir hata oluştu. Lütfen tekrar deneyin." };
   }
+
+  redirect("/dashboard");
 }
 
 export async function signOut() {
