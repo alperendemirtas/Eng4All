@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import React, { useState } from "react"
 import { useRouter } from "next/navigation"
 import {
   ChevronDown,
@@ -36,28 +36,6 @@ export default function LandingPage() {
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
-      {/* Header */}
-      <header className="w-full p-4 flex justify-between items-center">
-        <div className="flex items-center">
-          <Eng4AllLogo size={48} />
-          <span className="text-lilac text-2xl font-bold ml-2">Eng4All</span>
-        </div>
-        <div className="flex items-center gap-4">
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-            className="rounded-full"
-            aria-label="Toggle theme"
-          >
-            {theme === "dark" ? <Sun className="h-5 w-5 text-lilac" /> : <Moon className="h-5 w-5 text-lilac" />}
-          </Button>
-          <div className="flex items-center text-muted-foreground">
-            <span className="mr-1">SİTE DİLİ: {language}</span>
-            <ChevronDown size={16} />
-          </div>
-        </div>
-      </header>
 
       {/* Main Content */}
       <main className="flex-grow flex flex-col items-center justify-center px-4 md:px-20 py-10 max-w-6xl mx-auto">
